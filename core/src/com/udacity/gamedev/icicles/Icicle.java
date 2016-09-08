@@ -33,11 +33,6 @@ public class Icicle {
     public void update(float delta) {
         velocity.mulAdd(Constants.ICICLES_ACCELERATION, delta);
         position.mulAdd(velocity, delta);
-
-        if (isOutOfScreen()) {
-            this.velocity.setZero();
-            this.position = initPosition();
-        }
     }
 
     public boolean isOutOfScreen() {

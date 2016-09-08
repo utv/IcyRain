@@ -2,12 +2,13 @@ package com.udacity.gamedev.icicles;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-public class Player {
+public class Player extends InputAdapter {
 
     public static final String TAG = Player.class.getName();
 
@@ -16,11 +17,13 @@ public class Player {
 
     // TODO: Add a viewport
     Viewport viewport;
+    int deaths;
     private float velocity = Constants.PLAYER_VELOCITY;
 
     // TODO: Add constructor that accepts and sets the viewport, then calls init()
     public Player(Viewport viewport) {
         this.viewport = viewport;
+        deaths = 0;
         init();
     }
 
@@ -64,6 +67,7 @@ public class Player {
             this.position.x += this.velocity * delta;
         }
 
+
         ensureInBounds();
 
     }
@@ -72,4 +76,20 @@ public class Player {
         this.position.x = Math.min(this.position.x, viewport.getWorldWidth() - Constants.PLAYER_HEAD_RADIUS);
         this.position.x = Math.max(this.position.x, Constants.PLAYER_HEAD_RADIUS);
     }
+
+    public boolean isHit(IcyRain icyRain) {
+        for (Icicle ice : icyRain.rain) {
+            if (ice.position.dst(this.position) < Constants.PLAYER_HEAD_RADIUS) {
+                this.deaths++;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        return super.touchDown(screenX, screenY, pointer, button);
+    }
+
 }
